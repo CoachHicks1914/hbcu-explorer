@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #E31C23 0%, #000000 50%, #00843D 100%);
     min-height: 100vh;
     padding: 20px;
     color: #333;
@@ -85,7 +85,7 @@ body {
 }
 
 .welcome-content strong {
-    color: #667eea;
+    color: #E31C23;
     font-size: 1.3rem;
 }
 
@@ -110,22 +110,24 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #333;
+    background: linear-gradient(135deg, #E31C23 0%, #C41E3A 100%);
+    color: white;
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px rgba(227, 28, 35, 0.5);
 }
 
 .btn-secondary {
     background: white;
-    color: #667eea;
+    color: #000000;
+    border: 2px solid #00843D;
 }
 
 .btn-secondary:hover {
-    background: #f0f0f0;
+    background: #00843D;
+    color: white;
     transform: translateY(-2px);
 }
 
@@ -157,7 +159,7 @@ body {
 .progress-summary p {
     font-size: 1.3rem;
     font-weight: bold;
-    color: #667eea;
+    color: #E31C23;
 }
 
 .progress-summary span {
@@ -216,7 +218,7 @@ body {
 .university-body .tagline {
     font-style: italic;
     font-size: 1.1rem;
-    color: #667eea;
+    color: #E31C23;
     margin-bottom: 10px;
     font-weight: 600;
 }
@@ -307,7 +309,7 @@ body {
 
 .location-card h3 {
     font-size: 1.6rem;
-    color: #667eea;
+    color: #E31C23;
     margin-bottom: 10px;
 }
 
@@ -344,7 +346,7 @@ body {
 
 .back-button {
     background: white;
-    color: #667eea;
+    color: #E31C23;
     border: none;
     padding: 12px 25px;
     font-size: 1.1rem;
@@ -376,7 +378,7 @@ body {
 }
 
 #location-description h3 {
-    color: #667eea;
+    color: #E31C23;
     font-size: 1.8rem;
     margin-top: 25px;
     margin-bottom: 15px;
@@ -402,11 +404,11 @@ body {
     border-radius: 15px;
     padding: 30px;
     margin: 30px 0;
-    border: 3px solid #667eea;
+    border: 3px solid #E31C23;
 }
 
 .quiz-section h3 {
-    color: #667eea;
+    color: #E31C23;
     font-size: 1.6rem;
     margin-bottom: 15px;
 }
@@ -437,7 +439,7 @@ body {
 }
 
 .quiz-option:hover {
-    border-color: #667eea;
+    border-color: #E31C23;
     transform: translateX(10px);
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
@@ -494,7 +496,7 @@ body {
 }
 
 .certificate-container h1 {
-    color: #667eea;
+    color: #E31C23;
     font-size: 3rem;
     margin-bottom: 20px;
 }
@@ -513,7 +515,7 @@ body {
 
 .student-name {
     font-size: 2.5rem;
-    color: #667eea;
+    color: #E31C23;
     font-weight: bold;
     margin: 20px 0;
 }
@@ -534,8 +536,8 @@ body {
 .certificate-seal {
     margin: 40px 0;
     padding: 20px;
-    border-top: 3px solid #667eea;
-    border-bottom: 3px solid #667eea;
+    border-top: 3px solid #E31C23;
+    border-bottom: 3px solid #E31C23;
 }
 
 .certificate-seal p {
@@ -545,7 +547,7 @@ body {
 
 .certificate-seal p:last-child {
     font-size: 1.2rem;
-    color: #667eea;
+    color: #E31C23;
     font-weight: bold;
 }
 
@@ -623,6 +625,64 @@ body {
     .student-name {
         font-size: 1.8rem;
     }
+}
+
+/* Coding with Culture Logo Styles */
+.cwc-logo-large {
+    max-width: 400px;
+    width: 90%;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+.cwc-logo-header {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 15px;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.cwc-logo-small {
+    max-width: 150px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.cwc-logo-certificate {
+    max-width: 250px;
+    width: 80%;
+    height: auto;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+.screen-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.screen-header-inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.screen-header-inline .cwc-logo-header {
+    max-width: 150px;
+    margin: 0;
+}
+
+.screen-header-inline .back-button {
+    margin: 0;
 }
 
 /* Print Styles for Certificate */

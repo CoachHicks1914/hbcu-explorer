@@ -10,6 +10,7 @@
     <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen active">
         <div class="container">
+            <img src="logo.png" alt="Coding with Culture" class="cwc-logo-large">
             <h1>🎓 HBCU Campus Explorer 🎓</h1>
             <p class="subtitle">Discover the Excellence of Historically Black Colleges and Universities</p>
             <div class="welcome-content">
@@ -24,7 +25,7 @@
             </div>
             <button class="btn-primary" onclick="showScreen('university-select')">Start Exploring! 🚀</button>
             <div class="credits">
-                <p>Created by Coding with Culture</p>
+                <img src="logo.png" alt="Coding with Culture" class="cwc-logo-small">
             </div>
         </div>
     </div>
@@ -32,6 +33,9 @@
     <!-- University Selection Screen -->
     <div id="university-select" class="screen">
         <div class="container">
+            <div class="screen-header">
+                <img src="logo.png" alt="Coding with Culture" class="cwc-logo-header">
+            </div>
             <h2>Choose Your HBCU to Explore</h2>
             <div class="progress-summary">
                 <p>Your Progress: <span id="total-progress">0%</span> Complete</p>
@@ -196,6 +200,9 @@
     <!-- Location Selection Screen -->
     <div id="location-select" class="screen">
         <div class="container">
+            <div class="screen-header">
+                <img src="logo.png" alt="Coding with Culture" class="cwc-logo-header">
+            </div>
             <h2 id="university-name"></h2>
             <p class="campus-intro" id="campus-intro"></p>
             <div class="location-grid">
@@ -231,7 +238,10 @@
     <!-- Location Detail Screen -->
     <div id="location-detail" class="screen">
         <div class="container">
-            <button class="back-button" onclick="backToLocations()">← Back to Locations</button>
+            <div class="screen-header-inline">
+                <img src="logo.png" alt="Coding with Culture" class="cwc-logo-header">
+                <button class="back-button" onclick="backToLocations()">← Back to Locations</button>
+            </div>
             <h2 id="location-title"></h2>
             <div class="location-content">
                 <div id="location-description"></div>
@@ -255,6 +265,7 @@
     <div id="certificate" class="screen">
         <div class="container">
             <div class="certificate-container">
+                <img src="logo.png" alt="Coding with Culture" class="cwc-logo-certificate">
                 <h1>🏆 Congratulations! 🏆</h1>
                 <h2>Certificate of Completion</h2>
                 <p class="certificate-text">This certifies that</p>
