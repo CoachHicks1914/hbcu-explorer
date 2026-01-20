@@ -515,6 +515,8 @@ const hbcuData = {
                     <h3>Student Organizations & Activities</h3>
                     <ul>
                         <li><strong>The Spelmanite (student newspaper)</strong></li>
+                        <li><strong>The Jaguarettes (dance team)</strong> - Competing at Nationals in 2027!</li>
+                        <li><strong>CheerTron</strong> - Spelman's cheer squad supporting Morehouse football</li>
                         <li><strong>Mahogany in Motion (dance team)</strong></li>
                         <li><strong>Spelman College Glee Club</strong></li>
                         <li><strong>Pre-Med/Pre-Law clubs</strong></li>
@@ -2101,11 +2103,42 @@ const hbcuData = {
 let currentUniversity = null;
 let currentLocation = null;
 let progress = {};
+let studentName = '';
 
 // Initialize App
 function initApp() {
     loadProgress();
+    loadStudentName();
     updateAllProgress();
+}
+
+// Load and save student name
+function loadStudentName() {
+    const saved = localStorage.getItem('hbcu_explorer_student_name');
+    if (saved) {
+        studentName = saved;
+        const input = document.getElementById('student-name-input');
+        if (input) input.value = studentName;
+    }
+}
+
+function saveStudentName(name) {
+    studentName = name;
+    localStorage.setItem('hbcu_explorer_student_name', name);
+}
+
+function startExploring() {
+    const nameInput = document.getElementById('student-name-input');
+    const name = nameInput.value.trim();
+    
+    if (name === '') {
+        alert('Please enter your name before exploring! 😊');
+        nameInput.focus();
+        return;
+    }
+    
+    saveStudentName(name);
+    showScreen('university-select');
 }
 
 // Screen Management
@@ -2289,6 +2322,10 @@ function showCertificate(university) {
     const universityName = hbcuData[university].name;
     document.getElementById('cert-university').textContent = universityName;
     
+    // Display student name on certificate
+    const displayName = studentName || 'HBCU Explorer';
+    document.querySelector('.student-name').textContent = displayName;
+    
     const date = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -2302,6 +2339,45 @@ function showCertificate(university) {
 // Back to Locations
 function backToLocations() {
     showScreen('location-select');
+}
+
+// Reset All Progress
+function resetAllProgress() {
+    const confirmed = confirm(
+        "Are you sure you want to reset ALL progress?\n\n" +
+        "This will:\n" +
+        "• Clear all HBCU visits and quiz answers\n" +
+        "• Remove your name\n" +
+        "• Start completely fresh\n\n" +
+        "This cannot be undone!"
+    );
+    
+    if (confirmed) {
+        // Clear all localStorage data
+        localStorage.removeItem('hbcu-explorer-progress');
+        localStorage.removeItem('hbcu_explorer_student_name');
+        
+        // Reset global variables
+        progress = {};
+        studentName = '';
+        currentUniversity = null;
+        currentLocation = null;
+        
+        // Clear the name input
+        const nameInput = document.getElementById('student-name-input');
+        if (nameInput) {
+            nameInput.value = '';
+        }
+        
+        // Update UI
+        updateAllProgress();
+        
+        // Return to welcome screen
+        showScreen('welcome-screen');
+        
+        // Show confirmation message
+        alert("✅ Progress reset! Enter your name to start fresh.");
+    }
 }
 
 // Progress Storage
