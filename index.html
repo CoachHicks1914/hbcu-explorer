@@ -15,6 +15,12 @@
             <p class="subtitle">Discover the Excellence of Historically Black Colleges and Universities</p>
             <div class="welcome-content">
                 <p>Welcome, Young Scholar! You're about to explore 8 amazing HBCUs where Black excellence thrives!</p>
+                
+                <div class="name-input-section">
+                    <label for="student-name-input">Enter Your Name:</label>
+                    <input type="text" id="student-name-input" placeholder="Your Name" maxlength="50">
+                </div>
+                
                 <p><strong>Your Mission:</strong></p>
                 <ul>
                     <li>Visit all 4 locations on each campus</li>
@@ -23,7 +29,8 @@
                     <li>Earn your completion certificate!</li>
                 </ul>
             </div>
-            <button class="btn-primary" onclick="showScreen('university-select')">Start Exploring! 🚀</button>
+            <button class="btn-primary" onclick="startExploring()">Start Exploring! 🚀</button>
+            <button class="btn-reset" onclick="resetAllProgress()">🔄 Reset Progress</button>
             <div class="credits">
                 <img src="logo.png" alt="Coding with Culture" class="cwc-logo-small">
             </div>
@@ -193,7 +200,10 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-secondary" onclick="showScreen('welcome-screen')">← Back to Welcome</button>
+            <div class="button-group">
+                <button class="btn-secondary" onclick="showScreen('welcome-screen')">← Back to Welcome</button>
+                <button class="btn-reset" onclick="resetAllProgress()">🔄 Reset All Progress</button>
+            </div>
         </div>
     </div>
 
