@@ -96,6 +96,46 @@ body {
     opacity: 0.9;
 }
 
+/* Name Input Section */
+.name-input-section {
+    margin: 25px auto;
+    max-width: 400px;
+}
+
+.name-input-section label {
+    display: block;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.name-input-section input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    border: 3px solid #00843D;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    background: white;
+    color: #000;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.name-input-section input:focus {
+    outline: none;
+    border-color: #E31C23;
+    box-shadow: 0 4px 15px rgba(227, 28, 35, 0.4);
+    transform: scale(1.02);
+}
+
+.name-input-section input::placeholder {
+    color: #999;
+}
+
 /* Buttons */
 .btn-primary, .btn-secondary {
     padding: 18px 40px;
@@ -129,6 +169,33 @@ body {
     background: #00843D;
     color: white;
     transform: translateY(-2px);
+}
+
+.btn-reset {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+}
+
+.btn-reset:hover {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: white;
+    transform: translateY(-2px);
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
 }
 
 .btn-complete {
