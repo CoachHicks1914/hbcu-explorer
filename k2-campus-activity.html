@@ -1218,80 +1218,118 @@
 
             // Get all blocks with arrows
             const blocks = Array.from(document.querySelectorAll('.sidewalk-block'));
-            let currentPos = 0; // Start position
-            const targetPos = gridSize * gridSize - 1; // End position
+            let currentPos = 0; // Start position (top-left)
+            const targetPos = gridSize * gridSize - 1; // End position (bottom-right)
             let path = [currentPos];
-            let success = true;
+            const visited = new Set([currentPos]); // Track visited to prevent loops
 
-            // Simple path validation
-            for (let step = 0; step < 20; step++) { // Max 20 steps to prevent infinite loop
-                const currentBlock = blocks[currentPos];
-                const arrow = currentBlock.textContent.trim();
-
+            // Follow the path step by step
+            for (let step = 0; step < 25; step++) { // Max 25 steps (enough for 5x5 grid)
+                // Check if we reached the goal!
                 if (currentPos === targetPos) {
-                    break; // Reached the end!
+                    // SUCCESS! Any path that reaches the end is correct!
+                    feedback.textContent = '🎉 Amazing! You did it! Your algorithm works!';
+                    feedback.className = 'feedback success';
+
+                    // Mark current puzzle as completed
+                    if (currentPuzzle) {
+                        completedPuzzles.add(currentPuzzle);
+                    }
+
+                    // Show next challenge button
+                    document.getElementById('next-puzzle-btn').style.display = 'inline-block';
+
+                    // Animate the path
+                    animatePath(path, blocks);
+                    return; // Exit - we won!
                 }
 
-                if (!arrow || currentBlock.classList.contains('start')) {
-                    // No arrow at current position (except start)
-                    if (currentBlock.classList.contains('start')) {
-                        // Look for the first step
-                        const nextBlock = blocks[currentPos + 1] || blocks[currentPos + gridSize];
-                        if (nextBlock && nextBlock.classList.contains('has-arrow')) {
-                            currentPos = parseInt(nextBlock.dataset.position);
-                            path.push(currentPos);
-                            continue;
+                // Find the next move based on current position
+                let nextPos = -1;
+                const currentBlock = blocks[currentPos];
+
+                // For start block, look for adjacent arrow
+                if (currentBlock.classList.contains('start')) {
+                    // Check right (position + 1)
+                    if (currentPos % gridSize < gridSize - 1) {
+                        const rightBlock = blocks[currentPos + 1];
+                        if (rightBlock && rightBlock.classList.contains('has-arrow')) {
+                            const arrow = rightBlock.textContent.trim();
+                            if (arrow) {
+                                nextPos = currentPos + 1;
+                            }
                         }
                     }
-                    break;
+                    // Check down (position + gridSize)
+                    if (nextPos === -1 && currentPos + gridSize < gridSize * gridSize) {
+                        const downBlock = blocks[currentPos + gridSize];
+                        if (downBlock && downBlock.classList.contains('has-arrow')) {
+                            const arrow = downBlock.textContent.trim();
+                            if (arrow) {
+                                nextPos = currentPos + gridSize;
+                            }
+                        }
+                    }
+                } else {
+                    // For regular blocks, follow the arrow
+                    const arrow = currentBlock.textContent.trim();
+
+                    if (!arrow) {
+                        // No arrow here - path incomplete
+                        feedback.textContent = '🤔 Not quite! Make sure there\'s a path all the way to the end!';
+                        feedback.className = 'feedback error';
+                        return;
+                    }
+
+                    // Calculate next position based on arrow direction
+                    switch(arrow) {
+                        case '⬆️':
+                            if (currentPos >= gridSize) { // Can move up
+                                nextPos = currentPos - gridSize;
+                            }
+                            break;
+                        case '⬇️':
+                            if (currentPos + gridSize < gridSize * gridSize) { // Can move down
+                                nextPos = currentPos + gridSize;
+                            }
+                            break;
+                        case '⬅️':
+                            if (currentPos % gridSize > 0) { // Can move left
+                                nextPos = currentPos - 1;
+                            }
+                            break;
+                        case '➡️':
+                            if (currentPos % gridSize < gridSize - 1) { // Can move right
+                                nextPos = currentPos + 1;
+                            }
+                            break;
+                    }
                 }
 
-                // Calculate next position based on arrow
-                let nextPos = currentPos;
-                switch(arrow) {
-                    case '⬆️':
-                        nextPos = currentPos - gridSize;
-                        break;
-                    case '⬇️':
-                        nextPos = currentPos + gridSize;
-                        break;
-                    case '⬅️':
-                        nextPos = currentPos - 1;
-                        break;
-                    case '➡️':
-                        nextPos = currentPos + 1;
-                        break;
+                // Validate the next move
+                if (nextPos === -1) {
+                    // Invalid move - arrow points off the grid
+                    feedback.textContent = '🤔 Oops! Your path goes off the campus! Try again!';
+                    feedback.className = 'feedback error';
+                    return;
                 }
 
-                // Check if move is valid
-                if (nextPos < 0 || nextPos >= gridSize * gridSize) {
-                    success = false;
-                    break;
+                // Check for infinite loops
+                if (visited.has(nextPos) && nextPos !== targetPos) {
+                    feedback.textContent = '🤔 Your path goes in a circle! Try a different way!';
+                    feedback.className = 'feedback error';
+                    return;
                 }
 
+                // Move to next position
                 currentPos = nextPos;
                 path.push(currentPos);
+                visited.add(currentPos);
             }
 
-            // Check if we reached the target
-            if (currentPos === targetPos) {
-                feedback.textContent = '🎉 Amazing! You did it! Your algorithm works!';
-                feedback.className = 'feedback success';
-
-                // Mark current puzzle as completed
-                if (currentPuzzle) {
-                    completedPuzzles.add(currentPuzzle);
-                }
-
-                // Show next challenge button
-                document.getElementById('next-puzzle-btn').style.display = 'inline-block';
-
-                // Animate the path
-                animatePath(path, blocks);
-            } else {
-                feedback.textContent = '🤔 Not quite! Try a different path!';
-                feedback.className = 'feedback error';
-            }
+            // If we get here, we ran out of steps without reaching the goal
+            feedback.textContent = '🤔 Not quite! Try a different path!';
+            feedback.className = 'feedback error';
         }
 
         function animatePath(path, blocks) {
