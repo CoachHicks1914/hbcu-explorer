@@ -897,7 +897,7 @@
     </div>
 
     <script>
-        // Puzzle Data with Different Scenarios
+        // Puzzle Data with Different Scenarios - Each puzzle has a unique path!
         const puzzleData = {
             student: {
                 character: '👨🏿‍🎓',
@@ -905,8 +905,8 @@
                 instruction: 'Help the new student get from the Dorm 🏠 to their First Class 📚!',
                 startIcon: '🏠',
                 endIcon: '📚',
-                startPos: 0,
-                endPos: 24
+                startPos: 0,    // Top-left corner
+                endPos: 24      // Bottom-right corner (EASY - first puzzle)
             },
             band: {
                 character: '👩🏾‍🎤',
@@ -914,8 +914,8 @@
                 instruction: 'Help the band member march from the Music Hall 🎵 to the Stadium 🏟️!',
                 startIcon: '🎵',
                 endIcon: '🏟️',
-                startPos: 0,
-                endPos: 24
+                startPos: 4,    // Top-right corner
+                endPos: 20      // Bottom-left corner (MEDIUM - diagonal other way!)
             },
             sorority: {
                 character: '👩🏿‍🦱',
@@ -923,8 +923,8 @@
                 instruction: 'Help the sorority sister get from the Student Center 🏛️ to the Step Show 💃🏿!',
                 startIcon: '🏛️',
                 endIcon: '💃🏿',
-                startPos: 0,
-                endPos: 24
+                startPos: 20,   // Bottom-left corner
+                endPos: 4       // Top-right corner (MEDIUM - going UP!)
             },
             athlete: {
                 character: '🏃🏾‍♂️',
@@ -932,8 +932,8 @@
                 instruction: 'Help the athlete run from Practice 🏃 to the Victory Celebration 🏆!',
                 startIcon: '🏃',
                 endIcon: '🏆',
-                startPos: 0,
-                endPos: 24
+                startPos: 10,   // Middle-left (center of grid)
+                endPos: 24      // Bottom-right (HARDER - different start!)
             }
         };
 
@@ -1116,21 +1116,23 @@
             // Use puzzle data or defaults
             const startIcon = puzzle ? puzzle.startIcon : '🏫';
             const endIcon = puzzle ? puzzle.endIcon : '🎓';
+            const startPos = puzzle ? puzzle.startPos : 0;
+            const endPos = puzzle ? puzzle.endPos : 24;
 
             for (let i = 0; i < gridSize * gridSize; i++) {
                 const block = document.createElement('div');
                 block.className = 'sidewalk-block drop-zone';
                 block.dataset.position = i;
 
-                // Set start position (top-left)
-                if (i === 0) {
+                // Set start position (from puzzle data)
+                if (i === startPos) {
                     block.classList.add('start');
                     block.classList.remove('drop-zone');
                     block.setAttribute('data-icon', startIcon);
                 }
 
-                // Set end position (bottom-right)
-                if (i === gridSize * gridSize - 1) {
+                // Set end position (from puzzle data)
+                if (i === endPos) {
                     block.classList.add('end');
                     block.classList.remove('drop-zone');
                     block.setAttribute('data-icon', endIcon);
@@ -1216,10 +1218,14 @@
         function runAlgorithm() {
             const feedback = document.getElementById('algorithm-feedback');
 
+            // Get current puzzle's start and end positions
+            const puzzle = currentPuzzle ? puzzleData[currentPuzzle] : null;
+            const startPos = puzzle ? puzzle.startPos : 0;
+            const targetPos = puzzle ? puzzle.endPos : 24;
+
             // Get all blocks with arrows
             const blocks = Array.from(document.querySelectorAll('.sidewalk-block'));
-            let currentPos = 0; // Start position (top-left)
-            const targetPos = gridSize * gridSize - 1; // End position (bottom-right)
+            let currentPos = startPos; // Start position (from puzzle)
             let path = [currentPos];
             const visited = new Set([currentPos]); // Track visited to prevent loops
 
@@ -1248,25 +1254,25 @@
                 let nextPos = -1;
                 const currentBlock = blocks[currentPos];
 
-                // For start block, look for adjacent arrow
+                // For start block, look for adjacent arrow in all directions
                 if (currentBlock.classList.contains('start')) {
-                    // Check right (position + 1)
-                    if (currentPos % gridSize < gridSize - 1) {
-                        const rightBlock = blocks[currentPos + 1];
-                        if (rightBlock && rightBlock.classList.contains('has-arrow')) {
-                            const arrow = rightBlock.textContent.trim();
-                            if (arrow) {
-                                nextPos = currentPos + 1;
-                            }
-                        }
-                    }
-                    // Check down (position + gridSize)
-                    if (nextPos === -1 && currentPos + gridSize < gridSize * gridSize) {
-                        const downBlock = blocks[currentPos + gridSize];
-                        if (downBlock && downBlock.classList.contains('has-arrow')) {
-                            const arrow = downBlock.textContent.trim();
-                            if (arrow) {
-                                nextPos = currentPos + gridSize;
+                    // Check all four directions for an arrow
+                    const directions = [
+                        { pos: currentPos + 1, valid: currentPos % gridSize < gridSize - 1 },      // Right
+                        { pos: currentPos - 1, valid: currentPos % gridSize > 0 },                  // Left
+                        { pos: currentPos + gridSize, valid: currentPos + gridSize < gridSize * gridSize }, // Down
+                        { pos: currentPos - gridSize, valid: currentPos >= gridSize }               // Up
+                    ];
+
+                    for (const dir of directions) {
+                        if (dir.valid) {
+                            const adjacentBlock = blocks[dir.pos];
+                            if (adjacentBlock && adjacentBlock.classList.contains('has-arrow')) {
+                                const arrow = adjacentBlock.textContent.trim();
+                                if (arrow) {
+                                    nextPos = dir.pos;
+                                    break; // Found an arrow, use it
+                                }
                             }
                         }
                     }
@@ -1333,11 +1339,17 @@
         }
 
         function animatePath(path, blocks) {
+            // Get current puzzle's start and end positions
+            const puzzle = currentPuzzle ? puzzleData[currentPuzzle] : null;
+            const startPos = puzzle ? puzzle.startPos : 0;
+            const endPos = puzzle ? puzzle.endPos : 24;
+
             path.forEach((pos, index) => {
                 setTimeout(() => {
                     blocks[pos].style.background = '#FFD700';
                     setTimeout(() => {
-                        if (pos !== 0 && pos !== gridSize * gridSize - 1) {
+                        // Don't reset start and end blocks
+                        if (pos !== startPos && pos !== endPos) {
                             blocks[pos].style.background = 'white';
                         }
                     }, 300);
