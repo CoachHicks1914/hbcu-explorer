@@ -64,6 +64,26 @@
             margin-bottom: 20px;
         }
 
+        .brand-logo {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .credits {
+            font-size: 16px;
+            color: #666;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .credits strong {
+            color: var(--red);
+        }
+
         h1 {
             color: var(--red);
             font-size: 48px;
@@ -301,6 +321,53 @@
             font-weight: bold;
         }
 
+        /* Puzzle Selection Styles */
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .puzzle-card {
+            background: white;
+            border: 6px solid var(--black);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .puzzle-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .puzzle-card.completed {
+            border-color: var(--green);
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        }
+
+        .puzzle-character {
+            font-size: 100px;
+            margin: 20px 0;
+        }
+
+        .puzzle-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--red);
+            margin: 15px 0;
+        }
+
+        .puzzle-description {
+            font-size: 20px;
+            color: #333;
+            line-height: 1.4;
+        }
+
         /* Algorithm Builder Styles */
         #algorithm-screen h2 {
             text-align: center;
@@ -317,6 +384,12 @@
             background: #FFF9E6;
             border-radius: 15px;
             border: 4px solid var(--yellow);
+        }
+
+        .character-display {
+            font-size: 80px;
+            text-align: center;
+            margin: 20px 0;
         }
 
         .algorithm-container {
@@ -394,19 +467,9 @@
             border-color: var(--black);
         }
 
-        .sidewalk-block.start::before {
-            content: '🏫';
-            font-size: 60px;
-        }
-
         .sidewalk-block.end {
             background: var(--red);
             border-color: var(--black);
-        }
-
-        .sidewalk-block.end::before {
-            content: '🎓';
-            font-size: 60px;
         }
 
         .sidewalk-block.drop-zone {
@@ -549,6 +612,7 @@
     <div class="container">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
+            <img src="logo.png" alt="Coding with Culture Logo" class="brand-logo">
             <div class="logo">🎓</div>
             <h1>HBCU Campus Adventure!</h1>
             <h2>For Kindergarten - 2nd Grade</h2>
@@ -558,6 +622,11 @@
             <button class="big-button" onclick="showScreen('storybook-screen')">
                 📖 Start Adventure!
             </button>
+            <div class="credits">
+                <strong>Created by Coding with Culture</strong><br>
+                Victor G. Hicks, Founder & CEO | Instructional Designer<br>
+                © 2026 Coding with Culture. All Rights Reserved.
+            </div>
         </div>
 
         <!-- Storybook Screen -->
@@ -687,8 +756,58 @@
             </div>
 
             <div style="text-align: center; margin-top: 40px;">
-                <button class="big-button" onclick="showScreen('algorithm-screen')" id="goto-algorithm">
+                <button class="big-button" onclick="showScreen('puzzle-selection-screen')" id="goto-algorithm">
                     ➡️ Build Algorithms!
+                </button>
+            </div>
+        </div>
+
+        <!-- Puzzle Selection Screen -->
+        <div id="puzzle-selection-screen" class="screen">
+            <button class="back-button" onclick="showScreen('campus-screen')">← Back</button>
+            <h2>🎯 Choose Your Algorithm Challenge!</h2>
+            <p class="instruction">
+                Help each student get where they need to go!<br>
+                Complete all 4 challenges to become an Algorithm Master!
+            </p>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="puzzle-progress" style="width: 0%;">0/4</div>
+            </div>
+
+            <div class="puzzle-grid">
+                <div class="puzzle-card" data-puzzle="student" onclick="startPuzzle('student')">
+                    <div class="puzzle-character">👨🏿‍🎓</div>
+                    <div class="puzzle-title">New Student</div>
+                    <div class="puzzle-description">Help the new student get from the dorm to their first class!</div>
+                    <div class="checkmark">✅</div>
+                </div>
+
+                <div class="puzzle-card" data-puzzle="band" onclick="startPuzzle('band')">
+                    <div class="puzzle-character">👩🏾‍🎤</div>
+                    <div class="puzzle-title">Band Member</div>
+                    <div class="puzzle-description">Help the band member march to the stadium for the big game!</div>
+                    <div class="checkmark">✅</div>
+                </div>
+
+                <div class="puzzle-card" data-puzzle="sorority" onclick="startPuzzle('sorority')">
+                    <div class="puzzle-character">👩🏿‍🦱</div>
+                    <div class="puzzle-title">Step Show Star</div>
+                    <div class="puzzle-description">Help the sorority sister get to the step show performance!</div>
+                    <div class="checkmark">✅</div>
+                </div>
+
+                <div class="puzzle-card" data-puzzle="athlete" onclick="startPuzzle('athlete')">
+                    <div class="puzzle-character">🏃🏾‍♂️</div>
+                    <div class="puzzle-title">Track Star</div>
+                    <div class="puzzle-description">Help the athlete run from practice to the victory celebration!</div>
+                    <div class="checkmark">✅</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="big-button" onclick="showScreen('completion-screen')" id="goto-final" style="display: none;">
+                    🎉 Finish Adventure!
                 </button>
             </div>
         </div>
@@ -705,10 +824,13 @@
 
         <!-- Algorithm Builder Screen -->
         <div id="algorithm-screen" class="screen">
-            <button class="back-button" onclick="showScreen('campus-screen')">← Back</button>
-            <h2>🎯 Create Your Campus Algorithm!</h2>
-            <p class="algorithm-instruction">
-                <strong>Help the student get from the School 🏫 to Graduation 🎓!</strong><br>
+            <button class="back-button" onclick="showScreen('puzzle-selection-screen')">← Back</button>
+            <h2 id="puzzle-screen-title">🎯 Create Your Campus Algorithm!</h2>
+
+            <div class="character-display" id="puzzle-character">👨🏿‍🎓</div>
+
+            <p class="algorithm-instruction" id="puzzle-instructions">
+                <strong>Help the student get to their destination!</strong><br>
                 Drag arrows from the toolbox to the gray squares to show the path!
             </p>
 
@@ -744,8 +866,8 @@
             <div class="feedback" id="algorithm-feedback"></div>
 
             <div style="text-align: center; margin-top: 30px;">
-                <button class="big-button" onclick="showScreen('completion-screen')" id="goto-completion" style="display: none;">
-                    🎉 Finish Adventure!
+                <button class="big-button" onclick="returnToPuzzleSelection()" id="next-puzzle-btn" style="display: none;">
+                    ✨ Next Challenge!
                 </button>
             </div>
         </div>
@@ -755,13 +877,19 @@
             <div style="text-align: center;">
                 <div style="font-size: 120px; margin: 30px 0;">🎉</div>
                 <h1 style="color: var(--red);">Amazing Work!</h1>
-                <h2>You're an HBCU Campus Expert!</h2>
+                <h2>You're an Algorithm Master!</h2>
                 <p style="font-size: 28px; margin: 30px 0; line-height: 1.6;">
-                    You explored the campus and created algorithms!<br>
+                    You explored the HBCU campus and solved all 4 algorithm challenges!<br>
+                    You helped the new student, band member, sorority sister, and athlete!<br>
                     You're thinking like a computer scientist!
                 </p>
                 <div style="font-size: 100px; margin: 30px 0;">⭐🏆⭐</div>
-                <button class="big-button" onclick="resetActivity()">
+                <div class="credits" style="border-top: 3px solid var(--yellow); padding-top: 20px;">
+                    <strong>Created by Coding with Culture</strong><br>
+                    Victor G. Hicks, Founder & CEO | Instructional Designer<br>
+                    © 2026 Coding with Culture
+                </div>
+                <button class="big-button" onclick="resetActivity()" style="margin-top: 30px;">
                     🔄 Explore Again!
                 </button>
             </div>
@@ -769,6 +897,50 @@
     </div>
 
     <script>
+        // Puzzle Data with Different Scenarios
+        const puzzleData = {
+            student: {
+                character: '👨🏿‍🎓',
+                title: 'Help the New Student!',
+                instruction: 'Help the new student get from the Dorm 🏠 to their First Class 📚!',
+                startIcon: '🏠',
+                endIcon: '📚',
+                startPos: 0,
+                endPos: 24
+            },
+            band: {
+                character: '👩🏾‍🎤',
+                title: 'Help the Band Member!',
+                instruction: 'Help the band member march from the Music Hall 🎵 to the Stadium 🏟️!',
+                startIcon: '🎵',
+                endIcon: '🏟️',
+                startPos: 0,
+                endPos: 24
+            },
+            sorority: {
+                character: '👩🏿‍🦱',
+                title: 'Help the Step Show Star!',
+                instruction: 'Help the sorority sister get from the Student Center 🏛️ to the Step Show 💃🏿!',
+                startIcon: '🏛️',
+                endIcon: '💃🏿',
+                startPos: 0,
+                endPos: 24
+            },
+            athlete: {
+                character: '🏃🏾‍♂️',
+                title: 'Help the Track Star!',
+                instruction: 'Help the athlete run from Practice 🏃 to the Victory Celebration 🏆!',
+                startIcon: '🏃',
+                endIcon: '🏆',
+                startPos: 0,
+                endPos: 24
+            }
+        };
+
+        // Track puzzle completion
+        let completedPuzzles = new Set();
+        let currentPuzzle = null;
+
         // Building Information Database
         const buildingData = {
             library: {
@@ -806,6 +978,52 @@
         // Track visited buildings
         let visitedBuildings = new Set();
         let algorithmCompleted = false;
+
+        // Puzzle Functions
+        function startPuzzle(puzzleId) {
+            currentPuzzle = puzzleId;
+            const puzzle = puzzleData[puzzleId];
+
+            // Update screen with puzzle-specific content
+            document.getElementById('puzzle-screen-title').textContent = puzzle.title;
+            document.getElementById('puzzle-character').textContent = puzzle.character;
+            document.getElementById('puzzle-instructions').innerHTML =
+                `<strong>${puzzle.instruction}</strong><br>Drag arrows from the toolbox to the gray squares to show the path!`;
+
+            // Reinitialize grid with puzzle-specific start/end
+            initializePathGrid(puzzle);
+            clearAlgorithm();
+            document.getElementById('algorithm-feedback').textContent = '';
+            document.getElementById('next-puzzle-btn').style.display = 'none';
+
+            showScreen('algorithm-screen');
+        }
+
+        function returnToPuzzleSelection() {
+            showScreen('puzzle-selection-screen');
+            updatePuzzleProgress();
+        }
+
+        function updatePuzzleProgress() {
+            const total = Object.keys(puzzleData).length;
+            const completed = completedPuzzles.size;
+            const percentage = (completed / total) * 100;
+
+            const progressBar = document.getElementById('puzzle-progress');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${completed}/${total}`;
+
+            // Mark completed puzzles
+            completedPuzzles.forEach(puzzleId => {
+                const card = document.querySelector(`[data-puzzle="${puzzleId}"]`);
+                if (card) card.classList.add('completed');
+            });
+
+            // Show finish button if all puzzles completed
+            if (completed === total) {
+                document.getElementById('goto-final').style.display = 'inline-block';
+            }
+        }
 
         // Storybook Functions
         let currentPage = 1;
@@ -892,8 +1110,13 @@
         const pathGrid = document.getElementById('path-grid');
 
         // Initialize the path grid
-        function initializePathGrid() {
+        function initializePathGrid(puzzle = null) {
             pathGrid.innerHTML = '';
+
+            // Use puzzle data or defaults
+            const startIcon = puzzle ? puzzle.startIcon : '🏫';
+            const endIcon = puzzle ? puzzle.endIcon : '🎓';
+
             for (let i = 0; i < gridSize * gridSize; i++) {
                 const block = document.createElement('div');
                 block.className = 'sidewalk-block drop-zone';
@@ -903,12 +1126,14 @@
                 if (i === 0) {
                     block.classList.add('start');
                     block.classList.remove('drop-zone');
+                    block.setAttribute('data-icon', startIcon);
                 }
 
                 // Set end position (bottom-right)
                 if (i === gridSize * gridSize - 1) {
                     block.classList.add('end');
                     block.classList.remove('drop-zone');
+                    block.setAttribute('data-icon', endIcon);
                 }
 
                 // Add drag and drop event listeners
@@ -918,6 +1143,28 @@
 
                 pathGrid.appendChild(block);
             }
+
+            // Update CSS to show dynamic icons
+            updateGridIcons();
+        }
+
+        function updateGridIcons() {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .sidewalk-block.start::before {
+                    content: attr(data-icon);
+                    font-size: 60px;
+                }
+                .sidewalk-block.end::before {
+                    content: attr(data-icon);
+                    font-size: 60px;
+                }
+            `;
+            // Remove old dynamic styles
+            const oldStyle = document.querySelector('style[data-dynamic="true"]');
+            if (oldStyle) oldStyle.remove();
+            style.setAttribute('data-dynamic', 'true');
+            document.head.appendChild(style);
         }
 
         // Drag and Drop Handlers
@@ -971,74 +1218,118 @@
 
             // Get all blocks with arrows
             const blocks = Array.from(document.querySelectorAll('.sidewalk-block'));
-            let currentPos = 0; // Start position
-            const targetPos = gridSize * gridSize - 1; // End position
+            let currentPos = 0; // Start position (top-left)
+            const targetPos = gridSize * gridSize - 1; // End position (bottom-right)
             let path = [currentPos];
-            let success = true;
+            const visited = new Set([currentPos]); // Track visited to prevent loops
 
-            // Simple path validation
-            for (let step = 0; step < 20; step++) { // Max 20 steps to prevent infinite loop
-                const currentBlock = blocks[currentPos];
-                const arrow = currentBlock.textContent.trim();
-
+            // Follow the path step by step
+            for (let step = 0; step < 25; step++) { // Max 25 steps (enough for 5x5 grid)
+                // Check if we reached the goal!
                 if (currentPos === targetPos) {
-                    break; // Reached the end!
+                    // SUCCESS! Any path that reaches the end is correct!
+                    feedback.textContent = '🎉 Amazing! You did it! Your algorithm works!';
+                    feedback.className = 'feedback success';
+
+                    // Mark current puzzle as completed
+                    if (currentPuzzle) {
+                        completedPuzzles.add(currentPuzzle);
+                    }
+
+                    // Show next challenge button
+                    document.getElementById('next-puzzle-btn').style.display = 'inline-block';
+
+                    // Animate the path
+                    animatePath(path, blocks);
+                    return; // Exit - we won!
                 }
 
-                if (!arrow || currentBlock.classList.contains('start')) {
-                    // No arrow at current position (except start)
-                    if (currentBlock.classList.contains('start')) {
-                        // Look for the first step
-                        const nextBlock = blocks[currentPos + 1] || blocks[currentPos + gridSize];
-                        if (nextBlock && nextBlock.classList.contains('has-arrow')) {
-                            currentPos = parseInt(nextBlock.dataset.position);
-                            path.push(currentPos);
-                            continue;
+                // Find the next move based on current position
+                let nextPos = -1;
+                const currentBlock = blocks[currentPos];
+
+                // For start block, look for adjacent arrow
+                if (currentBlock.classList.contains('start')) {
+                    // Check right (position + 1)
+                    if (currentPos % gridSize < gridSize - 1) {
+                        const rightBlock = blocks[currentPos + 1];
+                        if (rightBlock && rightBlock.classList.contains('has-arrow')) {
+                            const arrow = rightBlock.textContent.trim();
+                            if (arrow) {
+                                nextPos = currentPos + 1;
+                            }
                         }
                     }
-                    break;
+                    // Check down (position + gridSize)
+                    if (nextPos === -1 && currentPos + gridSize < gridSize * gridSize) {
+                        const downBlock = blocks[currentPos + gridSize];
+                        if (downBlock && downBlock.classList.contains('has-arrow')) {
+                            const arrow = downBlock.textContent.trim();
+                            if (arrow) {
+                                nextPos = currentPos + gridSize;
+                            }
+                        }
+                    }
+                } else {
+                    // For regular blocks, follow the arrow
+                    const arrow = currentBlock.textContent.trim();
+
+                    if (!arrow) {
+                        // No arrow here - path incomplete
+                        feedback.textContent = '🤔 Not quite! Make sure there\'s a path all the way to the end!';
+                        feedback.className = 'feedback error';
+                        return;
+                    }
+
+                    // Calculate next position based on arrow direction
+                    switch(arrow) {
+                        case '⬆️':
+                            if (currentPos >= gridSize) { // Can move up
+                                nextPos = currentPos - gridSize;
+                            }
+                            break;
+                        case '⬇️':
+                            if (currentPos + gridSize < gridSize * gridSize) { // Can move down
+                                nextPos = currentPos + gridSize;
+                            }
+                            break;
+                        case '⬅️':
+                            if (currentPos % gridSize > 0) { // Can move left
+                                nextPos = currentPos - 1;
+                            }
+                            break;
+                        case '➡️':
+                            if (currentPos % gridSize < gridSize - 1) { // Can move right
+                                nextPos = currentPos + 1;
+                            }
+                            break;
+                    }
                 }
 
-                // Calculate next position based on arrow
-                let nextPos = currentPos;
-                switch(arrow) {
-                    case '⬆️':
-                        nextPos = currentPos - gridSize;
-                        break;
-                    case '⬇️':
-                        nextPos = currentPos + gridSize;
-                        break;
-                    case '⬅️':
-                        nextPos = currentPos - 1;
-                        break;
-                    case '➡️':
-                        nextPos = currentPos + 1;
-                        break;
+                // Validate the next move
+                if (nextPos === -1) {
+                    // Invalid move - arrow points off the grid
+                    feedback.textContent = '🤔 Oops! Your path goes off the campus! Try again!';
+                    feedback.className = 'feedback error';
+                    return;
                 }
 
-                // Check if move is valid
-                if (nextPos < 0 || nextPos >= gridSize * gridSize) {
-                    success = false;
-                    break;
+                // Check for infinite loops
+                if (visited.has(nextPos) && nextPos !== targetPos) {
+                    feedback.textContent = '🤔 Your path goes in a circle! Try a different way!';
+                    feedback.className = 'feedback error';
+                    return;
                 }
 
+                // Move to next position
                 currentPos = nextPos;
                 path.push(currentPos);
+                visited.add(currentPos);
             }
 
-            // Check if we reached the target
-            if (currentPos === targetPos) {
-                feedback.textContent = '🎉 Amazing! You did it! Your algorithm works!';
-                feedback.className = 'feedback success';
-                algorithmCompleted = true;
-                document.getElementById('goto-completion').style.display = 'inline-block';
-
-                // Animate the path
-                animatePath(path, blocks);
-            } else {
-                feedback.textContent = '🤔 Not quite! Try a different path!';
-                feedback.className = 'feedback error';
-            }
+            // If we get here, we ran out of steps without reaching the goal
+            feedback.textContent = '🤔 Not quite! Try a different path!';
+            feedback.className = 'feedback error';
         }
 
         function animatePath(path, blocks) {
@@ -1056,15 +1347,22 @@
 
         function resetActivity() {
             visitedBuildings.clear();
+            completedPuzzles.clear();
             algorithmCompleted = false;
+            currentPuzzle = null;
             currentPage = 1;
 
             document.querySelectorAll('.building').forEach(b => b.classList.remove('visited'));
-            updateCampusProgress();
-            clearAlgorithm();
-            document.getElementById('goto-completion').style.display = 'none';
-            updateStoryNav();
+            document.querySelectorAll('.puzzle-card').forEach(c => c.classList.remove('completed'));
 
+            updateCampusProgress();
+            updatePuzzleProgress();
+            clearAlgorithm();
+
+            document.getElementById('goto-final').style.display = 'none';
+            document.getElementById('next-puzzle-btn').style.display = 'none';
+
+            updateStoryNav();
             showScreen('welcome-screen');
         }
 
@@ -1073,6 +1371,7 @@
             initializePathGrid();
             updateStoryNav();
             updateCampusProgress();
+            updatePuzzleProgress();
         });
 
         // Close modal when clicking outside
