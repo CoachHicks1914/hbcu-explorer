@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Assessment Rubric | Coding with Culture</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #E31C23 0%, #000000 50%, #00843D 100%);
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* Header */
+.header {
+  text-align: center;
+  padding: 20px 0 10px;
+}
+.header h1 { font-size: 2rem; color: #FFD700; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.header p { color: #fff; font-size: 1rem; margin-top: 4px; }
+
+/* Cards */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  margin: 16px 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.card h2 { font-size: 1.3rem; color: #E31C23; margin-bottom: 16px; border-bottom: 2px solid #FFD700; padding-bottom: 8px; }
+
+/* Form */
+.form-row { margin-bottom: 14px; }
+.form-row label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.95rem; }
+.form-row input, .form-row select, .form-row textarea {
+  width: 100%; padding: 10px 12px; border: 2px solid #ddd;
+  border-radius: 8px; font-size: 1rem; font-family: inherit;
+}
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+  outline: none; border-color: #E31C23;
+}
+.form-row textarea { resize: vertical; min-height: 80px; }
+
+/* Rubric Category */
+.rubric-category {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  border-left: 4px solid #E31C23;
+}
+.rubric-category h3 { font-size: 1.05rem; color: #111; margin-bottom: 4px; }
+.rubric-category .desc { font-size: 0.88rem; color: #555; margin-bottom: 12px; }
+
+.score-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.score-btn {
+  flex: 1; min-width: 80px; padding: 10px 6px;
+  border: 2px solid #ddd; border-radius: 8px;
+  background: #fff; cursor: pointer; text-align: center;
+  font-size: 0.8rem; font-weight: 600; transition: all 0.2s;
+}
+.score-btn .num { font-size: 1.3rem; display: block; }
+.score-btn:hover { border-color: #E31C23; background: #fff5f5; }
+.score-btn.selected { border-color: #E31C23; background: #E31C23; color: #fff; }
+.score-btn.selected-2 { border-color: #e87722; background: #e87722; color: #fff; }
+.score-btn.selected-3 { border-color: #FFD700; background: #FFD700; color: #333; }
+.score-btn.selected-4 { border-color: #00843D; background: #00843D; color: #fff; }
+
+.category-comment { width: 100%; padding: 8px 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 0.9rem; font-family: inherit; resize: vertical; min-height: 60px; }
+.category-comment:focus { outline: none; border-color: #E31C23; }
+.comment-label { font-size: 0.82rem; color: #666; margin-bottom: 4px; display: block; }
+
+/* Score labels */
+.score-labels { font-size: 0.78rem; color: #666; margin-bottom: 8px; }
+
+/* Buttons */
+.btn {
+  display: inline-block; padding: 12px 28px; border: none; border-radius: 10px;
+  font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.1s, opacity 0.2s;
+}
+.btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary { background: #E31C23; color: #fff; }
+.btn-green { background: #00843D; color: #fff; }
+.btn-gold { background: #FFD700; color: #333; }
+.btn-outline { background: transparent; border: 2px solid #fff; color: #fff; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+
+/* Results */
+.results-header { text-align: center; padding: 10px 0 20px; }
+.total-score-box {
+  background: linear-gradient(135deg, #E31C23, #00843D);
+  color: #fff; border-radius: 16px; padding: 20px;
+  text-align: center; margin-bottom: 20px;
+}
+.total-score-box .big-score { font-size: 3rem; font-weight: 900; }
+.total-score-box .score-label { font-size: 1.1rem; margin-top: 4px; }
+.total-score-box .score-badge { font-size: 1.4rem; font-weight: 700; color: #FFD700; margin-top: 6px; }
+
+.result-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 12px 0; border-bottom: 1px solid #eee; gap: 12px;
+}
+.result-row:last-child { border-bottom: none; }
+.result-cat-name { font-weight: 600; font-size: 0.95rem; flex: 1; }
+.result-score-pill {
+  padding: 4px 14px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; white-space: nowrap;
+}
+.pill-1 { background: #fce4e4; color: #c0392b; }
+.pill-2 { background: #fdebd0; color: #d35400; }
+.pill-3 { background: #fef9e7; color: #b7950b; }
+.pill-4 { background: #d5f5e3; color: #1e8449; }
+.result-comment-text { font-size: 0.85rem; color: #666; margin-top: 4px; font-style: italic; }
+
+/* Student share view */
+.share-card {
+  background: #fff; border-radius: 16px; padding: 28px; margin: 16px 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+.share-header { text-align: center; margin-bottom: 20px; }
+.share-header h2 { color: #E31C23; font-size: 1.5rem; }
+.share-header .student-name-display { font-size: 1.2rem; font-weight: 700; margin-top: 6px; }
+.share-header .project-info { color: #666; font-size: 0.9rem; margin-top: 4px; }
+
+.congrats-banner {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 20px;
+}
+.congrats-banner p { font-weight: 700; font-size: 1.1rem; }
+
+/* Saved list */
+.saved-item {
+  padding: 12px 16px; border: 2px solid #eee; border-radius: 10px;
+  margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+}
+.saved-item:hover { border-color: #E31C23; background: #fff5f5; }
+.saved-item .saved-name { font-weight: 600; }
+.saved-item .saved-meta { font-size: 0.82rem; color: #888; }
+.delete-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1.1rem; padding: 4px; }
+.delete-btn:hover { color: #E31C23; }
+
+.no-saved { text-align: center; color: #aaa; padding: 20px; }
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .no-print { display: none !important; }
+  .share-card { box-shadow: none; }
+}
+
+@media (max-width: 600px) {
+  .score-btn { min-width: 60px; font-size: 0.75rem; }
+  .header h1 { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- SETUP SCREEN -->
+  <div id="screen-setup" class="screen active">
+    <div class="header">
+      <h1>🏆 Project Assessment Rubric</h1>
+      <p>Powered by Coding with Culture</p>
+    </div>
+
+    <div class="card">
+      <h2>📋 Project Info</h2>
+      <div class="form-row">
+        <label for="student-name">Student Name(s)</label>
+        <input type="text" id="student-name" placeholder="e.g. Jordan Smith or Team Awesome">
+      </div>
+      <div class="form-row">
+        <label for="project-title">Project Title</label>
+        <input type="text" id="project-title" placeholder="e.g. My Community App">
+      </div>
+      <div class="form-row">
+        <label for="project-type">Project Type</label>
+        <select id="project-type">
+          <option value="">-- Choose a type --</option>
+          <option value="Game Design">🎮 Game Design</option>
+          <option value="Mobile App">📱 Mobile App Design</option>
+          <option value="Website">🌐 Website Design</option>
+          <option value="Other CS Project">💻 Other CS Project</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="class-period">Class / Period</label>
+        <input type="text" id="class-period" placeholder="e.g. Period 3 or Ms. Hicks – 7th Grade">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="startRubric()">Start Scoring ✏️</button>
+      <button class="btn btn-outline" onclick="showScreen('screen-saved')">📂 View Saved</button>
+    </div>
+  </div>
+
+  <!-- RUBRIC SCORING SCREEN -->
+  <div id="screen-rubric" class="screen">
+    <div class="header">
+      <h1>✏️ Score the Project</h1>
+      <p id="rubric-subtitle">Scoring: —</p>
+    </div>
+
+    <div class="card">
+      <h2>How to Score</h2>
+      <div class="score-labels">
+        <strong>1 – Just Getting Started</strong> &nbsp;|&nbsp;
+        <strong>2 – Making Progress</strong> &nbsp;|&nbsp;
+        <strong>3 – Almost There</strong> &nbsp;|&nbsp;
+        <strong>4 – Knocking It Out the Park! 🎉</strong>
+      </div>
+      <p style="font-size:0.88rem;color:#666;">Click a score for each area, then add a short comment if you'd like.</p>
+    </div>
+
+    <div id="rubric-categories"></div>
+
+    <div class="card">
+      <h2>💬 Overall Teacher Comments</h2>
+      <div class="form-row">
+        <textarea id="overall-comments" placeholder="Add your overall feedback for the student here…"></textarea>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="saveAndShowResults()">See Results 📊</button>
+      <button class="btn btn-outline" onclick="showScreen('screen-setup')">← Back</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-results" class="screen">
+    <div class="header">
+      <h1>📊 Assessment Results</h1>
+    </div>
+
+    <div class="card">
+      <div id="results-content"></div>
+      <div class="btn-row no-print">
+        <button class="btn btn-gold" onclick="showStudentView()">👁️ Student View</button>
+        <button class="btn btn-green" onclick="saveAssessment()">💾 Save</button>
+        <button class="btn btn-primary" onclick="startNew()">➕ New Assessment</button>
+        <button class="btn btn-outline" onclick="showScreen('screen-setup')">← Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDENT SHARE VIEW -->
+  <div id="screen-student" class="screen">
+    <div class="header no-print">
+      <h1>👀 Student View</h1>
+      <p>This is what your student will see</p>
+    </div>
+
+    <div class="share-card" id="student-share-content"></div>
+
+    <div class="btn-row no-print">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-outline" onclick="showScreen('screen-results')">← Back to Results</button>
+    </div>
+  </div>
+
+  <!-- SAVED ASSESSMENTS SCREEN -->
+  <div id="screen-saved" class="screen">
+    <div class="header">
+      <h1>📂 Saved Assessments</h1>
+    </div>
+    <div class="card">
+      <h2>Previously Scored Projects</h2>
+      <div id="saved-list"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="showScreen('screen-setup')">← Back</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── RUBRIC DEFINITION ───────────────────────────────────────────────────────
+const CATEGORIES = [
+  {
+    id: "technical",
+    title: "💻 Technical Skills",
+    desc: "Does the project actually work? Is the code (or blocks) organized and easy to follow?",
+    levels: [
+      "The project has a lot of bugs or doesn't run yet.",
+      "The project runs sometimes, but some parts are broken or confusing.",
+      "The project mostly works. The code is pretty organized.",
+      "The project runs great! The code is clean, organized, and easy to understand."
+    ]
+  },
+  {
+    id: "design",
+    title: "🎨 Design & User Experience",
+    desc: "Is the project easy to use? Does the layout, look, or gameplay make sense?",
+    levels: [
+      "The design is hard to follow or incomplete.",
+      "Some parts of the design work, but it can be confusing to use.",
+      "The design is clear and mostly easy to use.",
+      "The design is creative, polished, and super easy to use. It looks and feels great!"
+    ]
+  },
+  {
+    id: "problemsolving",
+    title: "🧠 Problem Solving & Planning",
+    desc: "Did the student think through their idea and build it step by step?",
+    levels: [
+      "There's no clear plan or the project is missing key pieces.",
+      "There's some planning, but the project needs more thought.",
+      "The student planned well and built most of what they set out to do.",
+      "The student had a clear vision, solved real problems, and delivered on their plan!"
+    ]
+  },
+  {
+    id: "creativity",
+    title: "✨ Creativity & Originality",
+    desc: "Does the project show the student's own ideas and personality?",
+    levels: [
+      "The project looks or feels like it was copied from a tutorial with nothing added.",
+      "A few original ideas were added, but most of it follows a template.",
+      "The student added their own ideas and made the project their own.",
+      "The project is totally unique and shows real creative thinking. It stands out!"
+    ]
+  },
+  {
+    id: "culture",
+    title: "🌍 Cultural & Community Connection",
+    desc: "Does the project connect to the student's community, culture, or a real-world problem that matters to them?",
+    levels: [
+      "The project has no real connection to culture or community.",
+      "There's a small mention of culture or community, but it's not a big part of the project.",
+      "The project connects to a real community need or cultural idea in a meaningful way.",
+      "The project deeply reflects the student's culture or community. You can feel the purpose and heart behind it!"
+    ]
+  },
+  {
+    id: "presentation",
+    title: "🎤 Presentation & Communication",
+    desc: "Could the student clearly explain what they built, why they built it, and how it works?",
+    levels: [
+      "The student had trouble explaining the project.",
+      "The student explained the basics, but struggled with some questions.",
+      "The student explained the project well and answered most questions confidently.",
+      "The student was a rockstar presenter — clear, confident, and answered everything like a pro!"
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentScores = {};   // { categoryId: { score: 1-4, comment: "" } }
+let currentMeta  = {};    // { name, title, type, period }
+let lastSavedId  = null;
+
+// ─── SCREENS ─────────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── SETUP ───────────────────────────────────────────────────────────────────
+function startRubric() {
+  const name  = document.getElementById('student-name').value.trim();
+  const title = document.getElementById('project-title').value.trim();
+  const type  = document.getElementById('project-type').value;
+  const period= document.getElementById('class-period').value.trim();
+
+  if (!name || !title || !type) {
+    alert('Please fill in Student Name, Project Title, and Project Type before continuing.');
+    return;
+  }
+
+  currentMeta = { name, title, type, period };
+  currentScores = {};
+  document.getElementById('rubric-subtitle').textContent = `${name} — ${title} (${type})`;
+  renderRubric();
+  showScreen('screen-rubric');
+}
+
+// ─── RENDER RUBRIC ────────────────────────────────────────────────────────────
+function renderRubric() {
+  const container = document.getElementById('rubric-categories');
+  container.innerHTML = '';
+
+  CATEGORIES.forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="rubric-category" style="border:none;padding:0;background:transparent">
+        <h3>${cat.title}</h3>
+        <p class="desc">${cat.desc}</p>
+        <div class="score-buttons">
+          ${[1,2,3,4].map(n => `
+            <button class="score-btn" id="btn-${cat.id}-${n}" onclick="setScore('${cat.id}', ${n})">
+              <span class="num">${n}</span>
+              ${scoreLabel(n)}
+            </button>`).join('')}
+        </div>
+        <span class="comment-label">Teacher comment (optional):</span>
+        <textarea class="category-comment" id="comment-${cat.id}" placeholder="What did you notice? What feedback do you have?"></textarea>
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function scoreLabel(n) {
+  const labels = ['Just Getting Started','Making Progress','Almost There','Knocking It Out! 🎉'];
+  return `<small>${labels[n-1]}</small>`;
+}
+
+function setScore(catId, score) {
+  if (!currentScores[catId]) currentScores[catId] = { score: 0, comment: '' };
+  currentScores[catId].score = score;
+
+  // Update button visuals
+  [1,2,3,4].forEach(n => {
+    const btn = document.getElementById(`btn-${catId}-${n}`);
+    btn.className = 'score-btn' + (n === score ? ` selected-${n}` : '');
+  });
+}
+
+// ─── SAVE & RESULTS ───────────────────────────────────────────────────────────
+function saveAndShowResults() {
+  // Collect comments
+  CATEGORIES.forEach(cat => {
+    if (!currentScores[cat.id]) currentScores[cat.id] = { score: 0, comment: '' };
+    currentScores[cat.id].comment = document.getElementById(`comment-${cat.id}`).value.trim();
+  });
+
+  const unscored = CATEGORIES.filter(c => !currentScores[c.id] || currentScores[c.id].score === 0);
+  if (unscored.length > 0) {
+    alert(`Please score all categories before continuing.\n\nMissing: ${unscored.map(c=>c.title).join(', ')}`);
+    return;
+  }
+
+  const overall = document.getElementById('overall-comments').value.trim();
+  currentMeta.overallComments = overall;
+  currentMeta.date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  renderResults();
+  showScreen('screen-results');
+}
+
+function renderResults() {
+  const total = CATEGORIES.reduce((sum, c) => sum + (currentScores[c.id]?.score || 0), 0);
+  const maxScore = CATEGORIES.length * 4;
+  const pct = Math.round((total / maxScore) * 100);
+  const badge = scoreBadge(pct);
+
+  let html = `
+    <div class="total-score-box">
+      <div>📋 ${currentMeta.name} — ${currentMeta.title}</div>
+      <div class="big-score">${total} / ${maxScore}</div>
+      <div class="score-label">${pct}%</div>
+      <div class="score-badge">${badge}</div>
+    </div>`;
+
+  CATEGORIES.forEach(cat => {
+    const s = currentScores[cat.id];
+    const pillClass = `pill-${s.score}`;
+    html += `
+      <div class="result-row">
+        <div style="flex:1">
+          <div class="result-cat-name">${cat.title}</div>
+          ${s.comment ? `<div class="result-comment-text">"${s.comment}"</div>` : ''}
+        </div>
+        <div class="result-score-pill ${pillClass}">${s.score}/4 — ${scoreLabel(s.score).replace(/<[^>]+>/g,'')}</div>
+      </div>`;
+  });
+
+  if (currentMeta.overallComments) {
+    html += `
+      <div style="margin-top:16px;padding:14px;background:#f9f9f9;border-radius:10px;">
+        <strong>Overall Comments:</strong>
+        <p style="margin-top:6px;font-size:0.95rem;">${currentMeta.overallComments}</p>
+      </div>`;
+  }
+
+  document.getElementById('results-content').innerHTML = html;
+}
+
+function scoreBadge(pct) {
+  if (pct >= 90) return '🏆 All-Star Coder!';
+  if (pct >= 75) return '🌟 Rising Star';
+  if (pct >= 60) return '💪 Keep Grinding';
+  return '🌱 Growing Coder';
+}
+
+// ─── STUDENT VIEW ─────────────────────────────────────────────────────────────
+function showStudentView() {
+  const total = CATEGORIES.reduce((sum, c) => sum + (currentScores[c.id]?.score || 0), 0);
+  const maxScore = CATEGORIES.length * 4;
+  const pct = Math.round((total / maxScore) * 100);
+  const badge = scoreBadge(pct);
+
+  let rows = '';
+  CATEGORIES.forEach(cat => {
+    const s = currentScores[cat.id];
+    rows += `
+      <div class="result-row">
+        <div style="flex:1">
+          <div class="result-cat-name">${cat.title}</div>
+          <div style="font-size:0.85rem;color:#555;margin-top:2px;">${cat.levels[s.score - 1]}</div>
+          ${s.comment ? `<div class="result-comment-text" style="margin-top:4px;">"${s.comment}"</div>` : ''}
+        </div>
+        <div class="result-score-pill pill-${s.score}">${s.score} / 4</div>
+      </div>`;
+  });
+
+  const overall = currentMeta.overallComments
+    ? `<div style="margin-top:16px;padding:14px;background:#f9f9f9;border-radius:10px;">
+        <strong>Message from your teacher:</strong>
+        <p style="margin-top:6px;">${currentMeta.overallComments}</p>
+       </div>` : '';
+
+  document.getElementById('student-share-content').innerHTML = `
+    <div class="share-header">
+      <h2>Your Project Feedback 🎉</h2>
+      <div class="student-name-display">${currentMeta.name}</div>
+      <div class="project-info">${currentMeta.title} &nbsp;|&nbsp; ${currentMeta.type}</div>
+      ${currentMeta.period ? `<div class="project-info">${currentMeta.period}</div>` : ''}
+      <div class="project-info" style="margin-top:4px;">${currentMeta.date}</div>
+    </div>
+    <div class="congrats-banner">
+      <p>${badge}</p>
+      <p style="font-size:1.3rem;font-weight:900;margin-top:4px;">${total} / ${maxScore} &nbsp; (${pct}%)</p>
+    </div>
+    ${rows}
+    ${overall}
+    <div style="text-align:center;margin-top:20px;color:#aaa;font-size:0.8rem;">
+      Assessed by Coding with Culture PBL Rubric
+    </div>`;
+
+  showScreen('screen-student');
+}
+
+// ─── SAVE / LOAD ──────────────────────────────────────────────────────────────
+function saveAssessment() {
+  const id = lastSavedId || Date.now().toString();
+  lastSavedId = id;
+
+  const record = {
+    id,
+    meta: { ...currentMeta },
+    scores: { ...currentScores }
+  };
+
+  const saved = getSaved();
+  const idx = saved.findIndex(r => r.id === id);
+  if (idx >= 0) saved[idx] = record; else saved.push(record);
+  localStorage.setItem('cwc-rubric-saved', JSON.stringify(saved));
+  alert(`Saved! "${currentMeta.name} — ${currentMeta.title}"`);
+}
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem('cwc-rubric-saved') || '[]'); }
+  catch { return []; }
+}
+
+function loadSaved(id) {
+  const record = getSaved().find(r => r.id === id);
+  if (!record) return;
+  currentMeta   = record.meta;
+  currentScores = record.scores;
+  lastSavedId   = id;
+  renderResults();
+  showScreen('screen-results');
+}
+
+function deleteSaved(id, e) {
+  e.stopPropagation();
+  if (!confirm('Delete this assessment?')) return;
+  const saved = getSaved().filter(r => r.id !== id);
+  localStorage.setItem('cwc-rubric-saved', JSON.stringify(saved));
+  renderSavedList();
+}
+
+function renderSavedList() {
+  const saved = getSaved();
+  const container = document.getElementById('saved-list');
+  if (saved.length === 0) {
+    container.innerHTML = '<div class="no-saved">No saved assessments yet.</div>';
+    return;
+  }
+  container.innerHTML = saved.map(r => `
+    <div class="saved-item" onclick="loadSaved('${r.id}')">
+      <div>
+        <div class="saved-name">${r.meta.name}</div>
+        <div class="saved-meta">${r.meta.title} · ${r.meta.type} · ${r.meta.date || ''}</div>
+      </div>
+      <button class="delete-btn" onclick="deleteSaved('${r.id}', event)" title="Delete">✕</button>
+    </div>`).join('');
+}
+
+function startNew() {
+  lastSavedId = null;
+  currentScores = {};
+  currentMeta = {};
+  document.getElementById('student-name').value = '';
+  document.getElementById('project-title').value = '';
+  document.getElementById('project-type').value = '';
+  document.getElementById('class-period').value = '';
+  document.getElementById('overall-comments').value = '';
+  showScreen('screen-setup');
+}
+
+// Render saved list when that screen opens
+const savedLink = document.querySelector('[onclick="showScreen(\'screen-saved\')"]');
+if (savedLink) {
+  savedLink.addEventListener('click', renderSavedList);
+}
+</script>
+</body>
+</html>
